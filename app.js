@@ -34,7 +34,7 @@ app.use('/api/user/', apiUserRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(config.serverPort, () => {
+app.listen(process.env.port || config.serverPort, () => {
     console.log('Server is listening on port ' + config.serverPort);
 })
 

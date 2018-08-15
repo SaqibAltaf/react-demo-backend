@@ -1,0 +1,9 @@
+{
+'name':'React-demo-backend',
+'description': 'simple application deploy on heroku for demo reactjs',
+'repository': 'https://github.com/SaqibAltaf/react-demo-backend.git',
+'logo': '',
+'keywords':['node', 'express', 'static']
+
+
+}
