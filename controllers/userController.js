@@ -131,7 +131,23 @@ var login = function (req, res) {
     }
 }
 
+
+
+var recipe = function(req,res){
+    let id = req.headers.authorization;
+    var name = req.body.name;
+    var steps = req.body.steps;
+    var UserID  = req.body.userID;
+    res.json({
+        name: name,
+        step: steps,
+        userID: id
+    })
+}
+
 module.exports = {
     signup,
-    login
+    login,
+    recipe
+
 }

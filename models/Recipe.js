@@ -1,36 +1,13 @@
 var mongoose = require('mongoose');
-
+var User = require("./User");
 
 
 var RecipeSchema = mongoose.Schema({
     name: {
         type: String
     },
-    lastname: {
-        type: String
-    },
-    password: {
-        type: String
-    },
-    email: {
-        type: String,
-        bcrypt: true,
-        required: true
-    },
-    facebookId: {
-        type: String,
-        default: ''
-    },
-    gmailId: {
-        type: String,
-        default: ''
-    },
-    gender: {
-        type: String
-    },
-    country: {
-        type: String
-    },
+    recipeSteps: [],
+    User: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     time: {
         type: Date,
         default: Date.now
@@ -40,4 +17,4 @@ var RecipeSchema = mongoose.Schema({
 
 
 
- module.exports = mongoose.model('Recipe', RecipeSchema);
+module.exports = mongoose.model('Recipe', RecipeSchema);
