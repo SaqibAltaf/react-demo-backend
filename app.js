@@ -32,6 +32,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+
+app.use(cors());
 //mongoose connection
 mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl, {

@@ -4,11 +4,11 @@ var secretKey = require('./../config/secretKey');
 
 //user Models
 var User = require('./../models/User');
+var Recipe = require('./../models/Recipe');
 
 
 var signup = function (req, res) {
     var response = {};
-
     if (req.body.name && req.body.lastname && req.body.password && req.body.email) {
         User.findOne({
             email: req.body.email
@@ -75,11 +75,8 @@ var signup = function (req, res) {
         });
         return;
     }
-
-
-
-
 }
+
 var login = function (req, res) {
     var email = req.body.email;
     var password = req.body.password;
@@ -131,18 +128,23 @@ var login = function (req, res) {
     }
 }
 
-
-
 var recipe = function(req,res){
-    let id = req.headers.authorization;
+    let token = req.headers.authorization;
+    let userobj = jwt.decode(token, secretKey);
+
     var name = req.body.name;
     var steps = req.body.steps;
-    var UserID  = req.body.userID;
-    res.json({
-        name: name,
-        step: steps,
-        userID: id
-    })
+    var UserID  = userobj.userID;
+    var Recipe =   Recipe();
+    Recipe.name = name;
+    Recipe.recipeSteps =  steps;
+    Recipe.User = UserID;
+
+    Recipe.save().then(data =>{
+        res.status(200).json({
+            data: data
+        })
+    });
 }
 
 module.exports = {
