@@ -3,11 +3,10 @@ var bcrypt = require('bcrypt');
 var secretKey = require('./../config/secretKey');
 
 //user Models
-var User = require('./../models/User');
-var Recipe = require('./../models/Recipe');
 
 
 var signup = function (req, res) {
+    var User = require('./../models/User');
     var response = {};
     if (req.body.name && req.body.lastname && req.body.password && req.body.email) {
         User.findOne({
@@ -78,6 +77,7 @@ var signup = function (req, res) {
 }
 
 var login = function (req, res) {
+    var User = require('./../models/User');
     var email = req.body.email;
     var password = req.body.password;
     if (email && password) {
@@ -87,24 +87,24 @@ var login = function (req, res) {
         }, function (err, user) {
             if (user) {
                 user.verifyPassword(password).then(function (result) {
-                        if (result) {
-                            res.status(200).json({
-                                code: 200,
-                                user: user,
-                                token: jwt.sign({
-                                    name: user.name,
-                                    email: user.email,
-                                    password: '',
-                                    userID: user._id
-                                }, secretKey.jwtSecret)
-                            })
-                        } else {
-                            res.status(404).json({
-                                code: 404,
-                                message: 'invalide email or password'
-                            })
-                        }
-                    })
+                    if (result) {
+                        res.status(200).json({
+                            code: 200,
+                            user: user,
+                            token: jwt.sign({
+                                name: user.name,
+                                email: user.email,
+                                password: '',
+                                userID: user._id
+                            }, secretKey.jwtSecret)
+                        })
+                    } else {
+                        res.status(404).json({
+                            code: 404,
+                            message: 'invalide email or password'
+                        })
+                    }
+                })
                     .catch((err) => {
                         console.log(`${err}`);
                         res.status(404).json({
@@ -128,28 +128,58 @@ var login = function (req, res) {
     }
 }
 
-var recipe = function(req,res){
+var recipe = function (req, res) {
+    var Recipe = require('./../models/Recipe');
     let token = req.headers.authorization;
     let userobj = jwt.decode(token, secretKey);
 
     var name = req.body.name;
     var steps = req.body.steps;
-    var UserID  = userobj.userID;
-    var Recipe =   Recipe();
+    var UserID = userobj.userID;
+    var Recipe = Recipe();
     Recipe.name = name;
-    Recipe.recipeSteps =  steps;
+    Recipe.recipeSteps = steps;
     Recipe.User = UserID;
 
-    Recipe.save().then(data =>{
+    Recipe.save().then(data => {
         res.status(200).json({
             data: data
         })
     });
 }
 
+
+var  getAllRecipe = function(req, res) {
+    var Recipe = require('./../models/Recipe');
+
+    Recipe.find().populate('User').exec(function(err, response){
+        res.status(200).json({
+            code: 200,
+            data : response
+        })
+    })
+        
+    
+//     Recipe.find({}, function(err, response){
+// res.status(200).json({
+//     code: 200,
+//     data : response
+// })
+//     })
+
+}
+
+ var postedBy = function(req, res){
+    var Recipe = require('./../models/Recipe');
+    var id = req.query.recipeID;
+// Recipe.findOne({id})
+ }
+
 module.exports = {
     signup,
     login,
-    recipe
+    recipe,
+    getAllRecipe,
+    postedBy
 
 }
