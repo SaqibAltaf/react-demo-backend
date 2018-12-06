@@ -1,6 +1,8 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var secretKey = require('./../config/secretKey');
+const server = require('http').createServer();
+const io = require('socket.io')(server);
 
 //user Models
 
@@ -152,21 +154,35 @@ var recipe = function (req, res) {
 var  getAllRecipe = function(req, res) {
     var Recipe = require('./../models/Recipe');
 
-    Recipe.find().populate('User').exec(function(err, response){
-        res.status(200).json({
-            code: 200,
-            data : response
-        })
-    })
-        
-    
-//     Recipe.find({}, function(err, response){
-// res.status(200).json({
-//     code: 200,
-//     data : response
-// })
-//     })
 
+    // const changeStream = Recipe.watch();
+    // changeStream.on("change", data =>{
+    //     res.json({
+    //         data:data
+    //     })
+    // })
+
+
+    // io.on('connection', function (err,socket) {
+    //     console.log("connection")
+    //     changeStream.on('change', function (change) {
+    //         Recipe.find().populate('User', { "_id": 1, "name": 1, "lastname": 1 }).exec(function (err, response) {
+    //             socket.emit("data",response);
+    //             // res.status(200).json({
+    //             //     code: 200,
+    //             //     data: response
+    //             // })
+    //         });
+    //     })
+    // });
+
+    Recipe.find().populate('User', { "_id": 1, "name": 1, "lastname": 1 }).exec(function (err, response) {
+        res.render('recipe', response)
+        // res.status(200).json({
+        //     code: 200,
+        //     data: response
+        // })
+    });
 }
 
  var postedBy = function(req, res){
