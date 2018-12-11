@@ -177,11 +177,10 @@ var  getAllRecipe = function(req, res) {
     // });
 
     Recipe.find().populate('User', { "_id": 1, "name": 1, "lastname": 1 }).exec(function (err, response) {
-        res.render('recipe', response)
-        // res.status(200).json({
-        //     code: 200,
-        //     data: response
-        // })
+        res.status(200).json({
+            code: 200,
+            data: response
+        })
     });
 }
 
