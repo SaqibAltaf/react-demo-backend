@@ -3,6 +3,8 @@ var bcrypt = require('bcrypt');
 var secretKey = require('./../config/secretKey');
 const server = require('http').createServer();
 const io = require('socket.io')(server);
+var mongoose = require('mongoose');
+
 
 //user Models
 
@@ -190,11 +192,53 @@ var  getAllRecipe = function(req, res) {
 // Recipe.findOne({id})
  }
 
+ var delRecipe = function(req, res){
+    var Recipe = require('./../models/Recipe');
+    let id = req.params.id;
+
+    Recipe.remove({_id : id}, function(err, response){
+        if (err) return res.send(err);
+        res.status(200).json({
+            status:200,
+            data : response
+        })
+    })
+
+ }
+
+ var streams = function(req, res){
+    var fs = require("fs");
+    var data = '';
+    
+    // Create a readable stream
+    var readerStream = fs.createReadStream('input.txt');
+    
+    // Set the encoding to be utf8. 
+    readerStream.setEncoding('UTF8');
+    
+    // Handle stream events --> data, end, and error
+    readerStream.on('data', function(chunk) {
+       data += chunk;
+    });
+    
+    readerStream.on('end',function() {
+       console.log(data);
+    });
+    
+    readerStream.on('error', function(err) {
+       console.log(err.stack);
+    });
+    
+    console.log("Program Ended");
+ }
+
 module.exports = {
     signup,
     login,
     recipe,
     getAllRecipe,
-    postedBy
+    postedBy,
+    delRecipe,
+    streams
 
 }

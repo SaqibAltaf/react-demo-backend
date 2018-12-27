@@ -8,6 +8,9 @@ router.post('/userLogin', userController.login);
 router.post('/postRecipe', userController.recipe);
 router.get('/getAllRecipe', userController.getAllRecipe);
 router.get('/postedBy', userController.postedBy);
+router.delete('/delRecipe/:id', userController.delRecipe);
+router.get('/readStream', userController.streams);
+
 
 
 
