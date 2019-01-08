@@ -7,6 +7,18 @@ var app = express();
 var config = require('./config/config');
 var secretKey = require('./config/secretKey');
 
+//setup socket
+var server = require('http').createServer(app);  
+var io = require('socket.io')(server);
+
+io.on('connection', function(client) {  
+    console.log('Client connected...');
+
+    client.on('join', function(data) {
+        console.log(data);
+    });
+});
+
 //importing routes
 var apiUserRoutes = require('./routes/apiUserRoutes');
 app.use(bodyParser.urlencoded({
