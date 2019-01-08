@@ -31,18 +31,12 @@ app.use(cors());
 
 //setup socket
 var server = require('http').createServer(app);  
-var io = require('socket.io')(server);
+var io =module.exports.io = require('socket.io')(server);
+var socketManger= require('./config/socketManger');
+
 io.set('origins', '*:*');
 
-io.on('connection', client => {  
-    console.log('Client connected...');
-
-    client.on('disconnect', () =>{
-        console.log("client disconnected")
-    })
-
-    client.emit('join', "my data haha yup it is");
-});
+io.on('connection', socketManger);
 
 //importing routes
 var apiUserRoutes = require('./routes/apiUserRoutes');
