@@ -7,24 +7,6 @@ var app = express();
 var config = require('./config/config');
 var secretKey = require('./config/secretKey');
 
-//setup socket
-var server = require('http').createServer(app);  
-var io = require('socket.io')(server);
-
-io.on('connection', function(client) {  
-    console.log('Client connected...');
-
-    client.on('join', function(data) {
-        console.log(data);
-    });
-});
-
-//importing routes
-var apiUserRoutes = require('./routes/apiUserRoutes');
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
 // Add headers
 app.use(function (req, res, next) {
 
@@ -35,7 +17,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
@@ -46,6 +28,28 @@ app.use(function (req, res, next) {
 });
 
 app.use(cors());
+
+//setup socket
+var server = require('http').createServer(app);  
+var io = require('socket.io')(server);
+io.set('origins', '*');
+
+io.on('connection', function(client) {  
+    console.log('Client connected...');
+
+    // client.on('join', function(data) {
+    //     console.log(data);
+    // });
+});
+
+//importing routes
+var apiUserRoutes = require('./routes/apiUserRoutes');
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
+
 //mongoose connection
 mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl, {
