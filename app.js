@@ -32,14 +32,16 @@ app.use(cors());
 //setup socket
 var server = require('http').createServer(app);  
 var io = require('socket.io')(server);
-io.set('origins', '*');
+io.set('origins', '*:*');
 
-io.on('connection', function(client) {  
+io.on('connection', client => {  
     console.log('Client connected...');
 
-    // client.on('join', function(data) {
-    //     console.log(data);
-    // });
+    client.on('disconnect', () =>{
+        console.log("client disconnected")
+    })
+
+    client.emit('join', "my data haha yup it is");
 });
 
 //importing routes
@@ -71,7 +73,7 @@ app.use('/api/user/', apiUserRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(process.env.port || config.serverPort, () => {
+server.listen(process.env.port || config.serverPort, () => {
     console.log('Server is listening on port ' + config.serverPort);
 })
 
