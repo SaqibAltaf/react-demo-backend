@@ -38,6 +38,7 @@ io.set('origins', '*:*');
 
 io.on('connection', socketManger);
 
+app.io = io;
 //importing routes
 var apiUserRoutes = require('./routes/apiUserRoutes');
 app.use(bodyParser.urlencoded({

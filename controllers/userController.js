@@ -155,30 +155,8 @@ var recipe = function (req, res) {
 
 var  getAllRecipe = function(req, res) {
     var Recipe = require('./../models/Recipe');
-
-
-    // const changeStream = Recipe.watch();
-    // changeStream.on("change", data =>{
-    //     res.json({
-    //         data:data
-    //     })
-    // })
-
-
-    // io.on('connection', function (err,socket) {
-    //     console.log("connection")
-    //     changeStream.on('change', function (change) {
-    //         Recipe.find().populate('User', { "_id": 1, "name": 1, "lastname": 1 }).exec(function (err, response) {
-    //             socket.emit("data",response);
-    //             // res.status(200).json({
-    //             //     code: 200,
-    //             //     data: response
-    //             // })
-    //         });
-    //     })
-    // });
-
     Recipe.find().populate('User', { "_id": 1, "name": 1, "lastname": 1 }).exec(function (err, response) {
+        req.app.io.emit("allrecipe", response)
         res.status(200).json({
             code: 200,
             data: response
