@@ -210,6 +210,28 @@ var  getAllRecipe = function(req, res) {
     console.log("Program Ended");
  }
 
+ var getTokenInfo = function(req, res){
+     var authorization = req.headers.authorization;
+     var decoded = jwt.verify(authorization, secretKey.jwtSecret);
+     res.status(200).json({
+         data : decoded,
+         status: 200
+     })
+ }
+
+
+ var allUsers = function(req, res){
+    var User = require('./../models/User');
+
+    User.find({}, {'name':1, 'lastname':1, 'email':1}).exec(function(err, result){
+        res.status(200).json({
+            data: result,
+            status: 200
+        })
+    })
+
+ }
+
 module.exports = {
     signup,
     login,
@@ -217,6 +239,7 @@ module.exports = {
     getAllRecipe,
     postedBy,
     delRecipe,
-    streams
-
+    streams,
+    getTokenInfo,
+    allUsers
 }
